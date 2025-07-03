@@ -1,0 +1,55 @@
+services:
+  web:
+    platform: linux/amd64
+    container_name: ${PROJECT_CODE:-BASE}-ODOO
+    build:
+      context: .
+      args:
+        - IMAGE_TAG=${IMAGE_TAG:-e18.0}
+    environment:
+      # FOR DEBUG
+      - CLIENT_WAIT=False
+      - DEBUG_PORT=${DEBUG_PORT:-3001}
+      - DEBUG_INIT_DB=${DEBUG_INIT_DB}
+      - DEBUG_INIT_MODULES=${DEBUG_INIT_MODULES}
+      - DEBUG_INIT_PATH=${DEBUG_INIT_PATH}
+      - ODOO_PARAMS=${ODOO_PARAMS}
+      - COVERAGE_DB= coverage
+      - ACCEPTABLE_COVERAGE= 70.0
+      - ENABLE_TEST= 1
+      - ODOO_TEST_TAGS= syscoon
+      - COVERAGE_ADDONS=syscoon_multi_ledger
+      - PYDEVD_DISABLE_FILE_VALIDATION=1
+      # FOR EXTERNAL DB HOSTING
+      - HOST=POSTGRES
+      - USER=${POSTGRES_USER:-odoo}
+      - PASSWORD=${POSTGRES_PASSWORD:-odoo}
+      # IF YOU CHOOSE TO RUN WITHOUT DOCKER_COMPOSE REMEMBER TO PATH THIS
+      - PGHOST=POSTGRES
+      - PGUSER=${POSTGRES_USER:-odoo}
+      - PGPASSWORD=${POSTGRES_PASSWORD:-odoo}
+      - PGDATABASE=${POSTGRES_DB:-postgres}
+    ports:
+      - "${ODOO_PORT:-8069}"
+      - "${DEBUG_PORT:-3001}:${DEBUG_PORT:-3001}"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./.sessions:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+      - ./.coverage:/mnt/development/coverage/logs
+      - ./config/coverage.ini:/mnt/development/coverage/coverage.ini
+      - ./internal_addons:/mnt/odoo/internal_addons
+      - ./external_addons:/mnt/odoo/external_addons
+      - ../../enterprise:/mnt/odoo-enterprise
+      - ../../odoo-sync:/usr/lib/python3/dist-packages/odoo
+    restart: "no" # run as a service
+    networks:
+      - db
+
+volumes:
+  odoo-web-data:
+
+networks:
+  db:
+    external: true

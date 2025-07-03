@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_move_line_filter" model="ir.ui.view">
+        <field name="name">Account Budget Line Search Inherit</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='reconcile_model_id']" position="after">
+                <field name="country_id"/>
+                <field name="user_id"/>
+            </xpath>
+            <xpath expr="//group/filter[@name='journal']" position="after">
+                <filter string="Country" name="country_id" domain="[]" context="{'group_by': 'country_id'}"/>
+                <filter string="Sales Person" name="user_id" domain="[]" context="{'group_by': 'user_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,53 @@
+services:
+  web:
+    # platform: linux/amd64
+    container_name: ${PROJECT_CODE:-BASE}-ODOO
+    build:
+      context: .
+      args:
+        - IMAGE_TAG=${IMAGE_TAG:-e18.0}
+    environment:
+      # FOR DEBUG
+      - CLIENT_WAIT=False
+      - DEBUG_PORT=${DEBUG_PORT:-3001}
+      - DEBUG_INIT_DB=${DEBUG_INIT_DB}
+      - DEBUG_INIT_MODULES=${DEBUG_INIT_MODULES}
+      - DEBUG_INIT_PATH=${DEBUG_INIT_PATH}
+      - ODOO_PARAMS=${ODOO_PARAMS}
+      - COVERAGE_DB= coverage
+      - ACCEPTABLE_COVERAGE= 70.0
+      - ENABLE_TEST= 1
+      - ODOO_TEST_TAGS= syscoon
+      - COVERAGE_ADDONS=syscoon_multi_ledger
+      - PYDEVD_DISABLE_FILE_VALIDATION=1
+    depends_on:
+      - db
+    ports:
+      - "${ODOO_PORT:-8069}"
+      - "${DEBUG_PORT:-3001}:${DEBUG_PORT:-3001}"
+    tty: true
+    stdin_open: true
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+      - ./.coverage:/mnt/development/coverage/logs
+      - ./internal_addons:/mnt/odoo/internal_addons
+      - ./external_addons:/mnt/odoo/external_addons
+      - ../../enterprise:/mnt/odoo-enterprise
+      - ../../odoo-sync:/usr/lib/python3/dist-packages/odoo
+    restart: "no" # run as a service
+  db:
+    container_name: ${PROJECT_CODE}-postgres
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    restart: always # run as a service
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+
+volumes:
+  odoo-web-data:
+  odoo-db-data:

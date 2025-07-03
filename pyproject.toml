@@ -1,0 +1,73 @@
+[tool.ruff]
+line-length = 110
+# Enable Pyflakes `E` and `F` codes by default.
+select = [
+    "F", "E", "C90", "I", "UP", "N", "B", "A", "C4", "RET", "SIM", "TID",
+]
+ignore = [
+    "UP008", "E741", "B023", "N802", "A003", "B904", "N806", "RET504", "RET506",
+    "B008", "B905", "UP006", "UP007", "RET502", "RET503", "TID252"
+]
+
+# Always autofix, but never try to fix `F401` (unused imports).
+fix = true
+unfixable = []
+per-file-ignores = {"__manifest__.py" = ["B018"], "__init__.py" = ["F401"]}
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "__init__.py"
+]
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.10.
+target-version = "py310"
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+# PEP 585 (List[int] -> list[int]) and PEP 604 (Optional[str] -> str | None) .
+keep-runtime-typing = true
+
+[tool.darker]
+revision = "master"
+verbose = true
+line-length = 110  # Passed to isort and Black, override their config
+log_level = "INFO"
+skip-string-normalization = true
+skip-magic-trailing-comma = true
+
+[tool.flake8]
+max-line-length = 110
+max-complexity = 16
+# B = bugbear
+# B9 = bugbear opinionated (incl line length)
+select = ["C", "E", "F", "W", "B", "B9"]
+# E203: whitespace before ':' (black behaviour)
+# E501: flake8 line length (covered by bugbear B950)
+# W503: line break before binary operator (black behaviour)
+ignore = ["E203", "E501", "W503"]

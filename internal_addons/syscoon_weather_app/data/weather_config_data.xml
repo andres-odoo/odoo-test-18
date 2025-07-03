@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Weather Configuration Form View -->
+    <record id="weather_config_view_form" model="ir.ui.view">
+        <field name="name">weather.config.view.form</field>
+        <field name="model">weather.config</field>
+        <field name="arch" type="xml">
+            <form string="Weather Configuration">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="api_key"/>
+                        <field name="url"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Weather Configuration Tree View -->
+    <record id="weather_config_view_list" model="ir.ui.view">
+        <field name="name">weather.config.view.list</field>
+        <field name="model">weather.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="api_key"/>
+                <field name="url"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Weather Configuration Action -->
+    <record id="weather_config_action" model="ir.actions.act_window">
+        <field name="name">Weather Configuration</field>
+        <field name="res_model">weather.config</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Weather Configuration Menu Item -->
+    <menuitem id="weather_config_menu"
+                name="Weather Configuration"
+                action="weather_config_action"
+                parent="base.menu_administration"
+                groups="base.group_system"
+    />
+</odoo>

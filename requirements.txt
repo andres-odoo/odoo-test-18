@@ -1,0 +1,9 @@
+pyjwt
+bcrypt
+fintech
+Pygments
+paramiko
+jingtrang
+python-gitlab
+astor
+openupgradelib

@@ -1,0 +1,45 @@
+# This workflow will install Python dependencies, run tests, and lint with a single version of Python
+# For more information, see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+include:
+  - project: internal/pipeline-management
+    file: odoo-pipelines/common.yml
+    ref: main
+  - project: internal/pipeline-management
+    file: odoo-pipelines/odoo-validate.yml
+    ref: main
+  # - project: internal/pipeline-management
+  #   file: odoo-pipelines/kubectl-pipeline.yml
+  #   ref: main
+  - local: "config/merger/merger.yml"
+
+variables:
+  ODOO_VERSION: "18.0"
+  ENABLE_TEST: "1" # ("1" or "0") will enable --test-enable
+  ODOO_TEST_TAGS: "syscoon" # specific tag to be run will be passed to --test-tags
+  PROJECT_CODE: "TEST"
+  ACCEPTABLE_COVERAGE: "0.0"
+  # kubectl config
+  KUBE_CONTEXT: "internal/pipeline-management:dev-pipeline-gitlab"
+  # postgres
+  POSTGRES_PASSWORD: $main_postgres_password
+  TENANCY_POSTGRES_PGHOST: "pg-odoo-test-postgres-odoo-test-13-postgres.pg-odoo-test.svc.cluster.local"
+  TENANCY_POSTGRES_HOST: ${TENANCY_POSTGRES_PGHOST}
+  # hosting
+  TENANCY_DOMAIN: "dev.7open.eu"
+  TENANCY_INGRESS_CLASS: "nginx"
+  ALLOW_LETSENCRYPT: "true"
+  CLUSTER_ISSUER_NAME: "7open-letsencrypt-prod"
+  CLUSTER_ISSUER_PK_REF: "7open-letsencrypt-prod-pk"
+  # odoo addons config
+  # ADDONS_TO_EXCLUDE: "syscoon_hr_timesheet"
+  # TENANCY_EXTRA_ADDONS_PATH: ",/mnt/odoo/external_addons,/mnt/odoo/themes_addons"
+
+ci:validate-commits:
+  extends: .ci:validate-commits
+
+ci:pre-commit:all-files:
+  extends: .ci:pre-commit:all-files
+
+ci:pre-commit:
+  extends: .ci:pre-commit
+  needs: ["ci:pre-commit:all-files"]

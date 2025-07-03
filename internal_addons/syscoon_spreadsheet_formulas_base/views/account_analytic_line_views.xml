@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_analytic_line_form_inherit_spreadsheet" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit.spreadsheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group/group/field[@name='company_id']" position="after">
+                <field name="budget_type"/>
+                <field name="budget_version"/>
+                <field name="sales_person"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_tree_inherit_spreadsheet" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit.spreadsheet</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="budget_type"/>
+                <field name="budget_version"/>
+                <field name="sales_person"/>
+                <field name="general_account_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

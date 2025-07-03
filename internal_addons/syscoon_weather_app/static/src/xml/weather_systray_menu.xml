@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="IconSystrayDropdown" owl="1">
+        <div t-ref="weatherDropdown" class="o-dropdown dropdown o-weather-manager o-dropdown--no-caret" style="width: 5.25rem;" t-on-click="_onClick">
+            <button id="systray_icon" class="o-dropdown dropdown-toggle px-0"/>
+            <div id="systray_notif" class="o-dropdown-menu p-0 weather-dropdown" style="max-height: 85vh; width: 22rem;" t-on-click.stop="">
+                <div id="systray_details" class="mt-2"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="SystrayIcon" owl="1">
+        <div class="systray-icon text-dark p-0 m-0 h6">
+            <t t-if="weatherData['current_weather']">
+                <t t-set="cw" t-value="weatherData['current_weather']"/>
+                <img t-if="cw" t-att-src="'http://openweathermap.org/img/w/' + cw.icon_code + '.png'" alt="Weather Icon"/>
+                <span class="align-middle pe-2" t-esc="cw.temp + '°'"/>
+            </t>
+            <t t-elif="error">
+                <div>Error fetching Icon.</div>
+            </t>
+        </div>
+    </t>
+    <t t-name="SystrayDetails" owl="1">
+        <div class="systray-details-wrapper">
+            <t t-if="weatherData">
+
+                <t t-set="cw" t-value="weatherData['current_weather']"/>
+
+                <div class="card">
+                    <div class="card-header text-center pt-1" style="font-size: 0.85rem;">
+                        <div class="fw-bold">
+                            <t t-esc="cw.country ? cw.city + ', ' + cw.country : cw.city"/>
+                        </div>
+                        <div>
+                            <t t-esc="cw.description + ' | ' + cw.temp + '°'"/>
+                        </div>
+                        <div>
+                            <t t-esc="'Wind speed ' + cw.wind_speed + 'Km/h'"/>
+                        </div>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-0 m-0 h6" style="font-size: 0.85rem;">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col text-center px-1">
+                                        <span>Now</span>
+                                        <br/>
+                                        <img t-att-src="'http://openweathermap.org/img/w/' + cw.icon_code + '.png'" alt="Weather Icon" style="width: 3rem;"/>
+                                        <br/>
+                                        <t t-esc="cw.temp + '°'"/>
+                                    </div>
+                                    <t t-foreach="weatherData['forecast'].slice(0, 3)" t-as="hour_w" t-key="hour_w_index">
+                                        <div class="col text-center px-1">
+                                            <t t-esc="hour_w.time"/>
+                                            <br/>
+                                            <img t-att-src="'http://openweathermap.org/img/w/' + hour_w.icon_code + '.png'" alt="Rain Icon" style="width: 3rem;"/>
+                                            <br/>
+                                            <t t-esc="hour_w.temp + '°'"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header p-0">
+                        <p class="my-2 ps-2">
+                            <i class="fa fa-calendar"/> 5-Day Forecast
+                        </p>
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        <t t-foreach="weatherData['info_list']" t-as="day_w" t-key="day_w_index">
+                            <li class="list-group-item h6 m-0 pt-0 pb-2">
+                                <div class="d-flex justify-content-around">
+                                    <span class="my-auto" style="width: 30%;">
+                                        <div t-esc="day_w.short_day == cw.short_day ? 'Today' : day_w.short_day"/>
+                                        <div t-esc="day_w.short_date" class="mt-2" style="font-size: 0.8rem"/>
+                                    </span>
+                                    <span>
+                                        <img t-att-src="'http://openweathermap.org/img/w/' + day_w.icon_code + '.png'" alt="Weather Icon" style="width: 3rem;"/>
+                                        <div class="d-flex align-items-end">
+                                            <img src="/syscoon_weather_app/static/src/img/umbrella.gif" alt="Rain GIF" style="width: 1.5rem;"/>
+                                            <span class="text-center text-info fw-bolder ps-1" style="font-size: 0.8rem;" t-esc="day_w.rain_avg ? day_w.rain_avg + ' %' : '0 %'"/>
+                                        </div>
+                                    </span>
+                                    <span class="my-auto">
+                                        <span class="ms-3" t-esc="day_w.temp_min + '°'"/>
+                                        <div class="border border-info d-inline-block align-middle" style="width: 2.5rem;"/>
+                                        <span class="ms-1" t-esc="day_w.temp_max + '°'"/>
+                                    </span>
+                                </div>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+
+            </t>
+            <t t-elif="error">
+                <div class="list-group-item">Error fetching weather data. Please try again later.</div>
+            </t>
+        </div>
+    </t>
+
+
+</templates>

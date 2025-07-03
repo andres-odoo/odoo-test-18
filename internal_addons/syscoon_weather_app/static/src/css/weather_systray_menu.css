@@ -1,0 +1,14 @@
+.systray-icon:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+.o-weather-manager {
+  position: relative;
+}
+
+.o-weather-manager .weather-dropdown {
+  position: absolute;
+  right: 0%;
+  top: 100%;
+  left: auto;
+}
